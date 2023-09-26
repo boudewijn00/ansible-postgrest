@@ -50,4 +50,40 @@
       apt: 
         name: sqitch
         state: present
+
+    - name: Install nginx
+      apt: 
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Ensure Nginx is started and enabled on boot
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Install Certbot dependencies
+      ansible.builtin.apt:
+        name:
+          - software-properties-common
+        state: present
+
+    - name: Install Certbot for Nginx
+      ansible.builtin.apt:
+        name:
+          - certbot
+          - python3-certbot-nginx
+        state: present
+
+    - name: Obtain and install Let's Encrypt certificate
+      ansible.builtin.command:
+        cmd: certbot --nginx --non-interactive --agree-tos --email boudewijn@hello-data.nl -d theridiid.net
+        creates: /etc/letsencrypt/live/theridiid.net/fullchain.pem
+   
+  handlers:
+    - name: Reload nginx
+      service:
+        name: nginx
+        state: reloaded
     
