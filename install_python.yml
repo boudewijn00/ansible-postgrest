@@ -1,0 +1,65 @@
+---
+- name: Install Docker and Docker Compose on Ubuntu
+  hosts: 23.88.54.223
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+    - name: Install Python 3.9
+      apt:
+        name: python3.9
+        state: present
+
+    - name: Install pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install venv
+      ansible.builtin.shell: >
+        pip install virtualenv
+      args:
+        executable: /bin/bash
+
+    - name: Install scrapyd
+      ansible.builtin.shell: >
+        pip install scrapyd
+      args:
+        executable: /bin/bash
+
+    - name: Install setuptools
+      ansible.builtin.shell: >
+        pip install setuptools
+      args:
+        executable: /bin/bash
+
+    - name: Install pyopenssl
+      ansible.builtin.shell: >
+        pip install pyopenssl --upgrade
+
+    - name: Copy scrapdy.service file
+      ansible.builtin.copy:
+        src: scrapyd.service
+        dest: /etc/systemd/system/scrapyd.service
+
+    - name: Start and enable scrapyd service
+      systemd:
+        name: scrapyd
+        enabled: yes
+        state: started
+    
+    

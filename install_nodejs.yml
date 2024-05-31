@@ -1,0 +1,38 @@
+---
+- name: Install Docker and Docker Compose on Ubuntu
+  hosts: 23.88.54.223
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+    - name: Install node version manager
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+
+    - name: install NPM 
+      ansible.builtin.shell: >
+        npm install -g npm@latest
+
+    - name: Install pm2
+      ansible.builtin.shell: >
+        npm install pm2@latest -g
+
+    - name: Copy ecosystem.config.js
+      ansible.builtin.copy:
+        src: ecosystem.config.js
+        dest: /root/ecosystem.config.js
