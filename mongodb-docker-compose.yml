@@ -1,0 +1,22 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: mkSG7Iwx
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - 27017:27017
+
+  mongosh:
+    image: mongo:latest
+    container_name: mongosh
+    depends_on:
+      - mongo
+    entrypoint: ["mongosh", "--host", "mongo", "-u", "admin", "-p", "mkSG7Iwx"]
+
+volumes:
+  mongodata:

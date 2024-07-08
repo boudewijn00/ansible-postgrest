@@ -1,0 +1,16 @@
+---
+- name: Copy mongodb-docker-compose.yml file
+  hosts: 23.88.54.223
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Copy mongodb-docker-compose.yml file
+      ansible.builtin.copy:
+        src: mongodb-docker-compose.yml
+        dest: /root/mongodb/docker-compose.yml
+
+    - name: cd into the directory and restart
+      ansible.builtin.command:
+        chdir: /root/mongodb
+        cmd: docker-compose up -d
