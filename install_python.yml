@@ -19,9 +19,9 @@
         - curl
         - software-properties-common
 
-    - name: Install Python 3.9
+    - name: Install Python 3.10
       apt:
-        name: python3.9
+        name: python3.10
         state: present
 
     - name: Install pip
@@ -61,5 +61,6 @@
         name: scrapyd
         enabled: yes
         state: started
+
     
     
